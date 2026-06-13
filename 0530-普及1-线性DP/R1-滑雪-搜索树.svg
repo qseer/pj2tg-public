@@ -1,0 +1,134 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="940" height="720" viewBox="0 0 940 720">
+  <style>
+    .title { font: bold 20px "PingFang SC", "Microsoft YaHei", sans-serif; fill: #222; }
+    .sub   { font: 14px "PingFang SC", "Microsoft YaHei", sans-serif; fill: #333; }
+    .mono  { font: 14px "Menlo", "Consolas", monospace; fill: #111; }
+    .cell  { fill: #fafafa; stroke: #555; stroke-width: 1.2; }
+    .cellHi{ fill: #fff3cd; stroke: #b58900; stroke-width: 1.6; }
+    .ctext { font: bold 16px "Menlo", "Consolas", monospace; fill: #111; }
+    .node-fresh { fill: #c8e6c9; stroke: #2e7d32; stroke-width: 1.6; }
+    .node-leaf  { fill: #bbdefb; stroke: #1565c0; stroke-width: 1.6; }
+    .node-memo  { fill: #ffcdd2; stroke: #c62828; stroke-width: 1.6; }
+    .ntext { font: bold 13px "Menlo", "Consolas", monospace; fill: #111; }
+    .edge      { stroke: #555; stroke-width: 1.5; fill: none; }
+    .edge-memo { stroke: #c62828; stroke-width: 1.5; stroke-dasharray: 5 3; fill: none; }
+    .etext { font: 12px "Menlo", "Consolas", monospace; fill: #555; }
+    .lg    { font: 13px "PingFang SC", "Microsoft YaHei", sans-serif; fill: #333; }
+  </style>
+
+  <!-- 标题 -->
+  <text x="470" y="32" text-anchor="middle" class="title">滑雪 · 记忆化搜索树（2×3 小样例，从 (2,1) 出发）</text>
+
+  <!-- 左上角：高度矩阵 -->
+  <g transform="translate(40, 60)">
+    <text x="0" y="0" class="sub">高度矩阵 h[i][j]（n=2, m=3）：</text>
+    <!-- 第一行 1 2 3 -->
+    <rect x="0"   y="14" width="44" height="44" class="cell"/>
+    <text x="22"  y="42" text-anchor="middle" class="ctext">1</text>
+    <rect x="44"  y="14" width="44" height="44" class="cell"/>
+    <text x="66"  y="42" text-anchor="middle" class="ctext">2</text>
+    <rect x="88"  y="14" width="44" height="44" class="cell"/>
+    <text x="110" y="42" text-anchor="middle" class="ctext">3</text>
+    <!-- 第二行 6 5 4，起点 (2,1)=6 高亮 -->
+    <rect x="0"   y="58" width="44" height="44" class="cellHi"/>
+    <text x="22"  y="86" text-anchor="middle" class="ctext">6</text>
+    <rect x="44"  y="58" width="44" height="44" class="cell"/>
+    <text x="66"  y="86" text-anchor="middle" class="ctext">5</text>
+    <rect x="88"  y="58" width="44" height="44" class="cell"/>
+    <text x="110" y="86" text-anchor="middle" class="ctext">4</text>
+    <text x="0" y="124" class="sub">起点：(2,1)=6（黄色），答案 = 6</text>
+  </g>
+
+  <!-- 右上角：图例 -->
+  <g transform="translate(640, 60)">
+    <text x="0" y="0" class="sub">图例：</text>
+    <rect x="0"  y="14" width="22" height="22" class="node-fresh"/>
+    <text x="32" y="30" class="lg">首次计算（递归展开子树）</text>
+    <rect x="0"  y="44" width="22" height="22" class="node-leaf"/>
+    <text x="32" y="60" class="lg">叶子（无更低的相邻格）</text>
+    <rect x="0"  y="74" width="22" height="22" class="node-memo"/>
+    <text x="32" y="90" class="lg">memo 命中（直接返回，不再展开）</text>
+    <line x1="0" y1="112" x2="22" y2="112" class="edge"/>
+    <text x="32" y="116" class="lg">普通递归边</text>
+    <line x1="0" y1="132" x2="22" y2="132" class="edge-memo"/>
+    <text x="32" y="136" class="lg">命中缓存的边（剪枝）</text>
+  </g>
+
+  <!-- ============ 搜索树 ============ -->
+  <!-- 节点尺寸：宽 130，高 38；用 (cx, cy) 表示节点中心 -->
+
+  <!-- 根 dfs(2,1)=6 -->
+  <g>
+    <rect x="385" y="190" width="170" height="44" rx="8" class="node-fresh"/>
+    <text x="470" y="218" text-anchor="middle" class="ntext">dfs(2,1)  返回 6</text>
+  </g>
+
+  <!-- L1: dfs(1,1)=1 [叶子] -->
+  <g>
+    <rect x="155" y="300" width="170" height="44" rx="8" class="node-leaf"/>
+    <text x="240" y="328" text-anchor="middle" class="ntext">dfs(1,1)  返回 1</text>
+  </g>
+  <!-- L1: dfs(2,2)=5 -->
+  <g>
+    <rect x="560" y="300" width="170" height="44" rx="8" class="node-fresh"/>
+    <text x="645" y="328" text-anchor="middle" class="ntext">dfs(2,2)  返回 5</text>
+  </g>
+
+  <!-- 根→L1 -->
+  <path d="M 440 234 L 280 300" class="edge"/>
+  <text x="335" y="270" class="etext">向上 h=1</text>
+  <path d="M 500 234 L 605 300" class="edge"/>
+  <text x="555" y="270" class="etext">向右 h=5</text>
+
+  <!-- L2: dfs(1,2)=2 -->
+  <g>
+    <rect x="395" y="410" width="170" height="44" rx="8" class="node-fresh"/>
+    <text x="480" y="438" text-anchor="middle" class="ntext">dfs(1,2)  返回 2</text>
+  </g>
+  <!-- L2: dfs(2,3)=4 -->
+  <g>
+    <rect x="700" y="410" width="170" height="44" rx="8" class="node-fresh"/>
+    <text x="785" y="438" text-anchor="middle" class="ntext">dfs(2,3)  返回 4</text>
+  </g>
+
+  <!-- dfs(2,2)→L2 -->
+  <path d="M 615 344 L 510 410" class="edge"/>
+  <text x="545" y="380" class="etext">向上 h=2</text>
+  <path d="M 680 344 L 755 410" class="edge"/>
+  <text x="710" y="380" class="etext">向右 h=4</text>
+
+  <!-- L3: dfs(1,1) memo 命中 -->
+  <g>
+    <rect x="320" y="520" width="200" height="44" rx="8" class="node-memo"/>
+    <text x="420" y="548" text-anchor="middle" class="ntext">dfs(1,1) memo → 1</text>
+  </g>
+  <!-- L3: dfs(1,3)=3 -->
+  <g>
+    <rect x="595" y="520" width="170" height="44" rx="8" class="node-fresh"/>
+    <text x="680" y="548" text-anchor="middle" class="ntext">dfs(1,3)  返回 3</text>
+  </g>
+
+  <!-- dfs(1,2)→dfs(1,1) memo -->
+  <path d="M 460 454 L 425 520" class="edge-memo"/>
+  <text x="335" y="490" class="etext">向左 h=1（已算过）</text>
+  <!-- dfs(2,3)→dfs(1,3) -->
+  <path d="M 770 454 L 700 520" class="edge"/>
+  <text x="755" y="490" class="etext">向上 h=3</text>
+
+  <!-- L4: dfs(1,2) memo 命中 -->
+  <g>
+    <rect x="580" y="630" width="200" height="44" rx="8" class="node-memo"/>
+    <text x="680" y="658" text-anchor="middle" class="ntext">dfs(1,2) memo → 2</text>
+  </g>
+
+  <!-- dfs(1,3)→dfs(1,2) memo -->
+  <path d="M 680 564 L 680 630" class="edge-memo"/>
+  <text x="690" y="600" class="etext">向左 h=2（已算过）</text>
+
+  <!-- 底部说明 -->
+  <g transform="translate(40, 690)">
+    <text x="0" y="0" class="sub">
+      调用过程：dfs(2,1)=max(dfs(1,1)+1, dfs(2,2)+1)=max(2,6)=6；其中 dfs(1,1)、dfs(1,2) 第二次出现时直接读 memo，O(1) 返回。
+    </text>
+  </g>
+</svg>
